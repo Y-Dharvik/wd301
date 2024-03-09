@@ -1,0 +1,12 @@
+{
+  "name": "wd301",
+  "version": "1.0.0",
+  "description": "WD301",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dharvik <dharvik.yerramshetty@gmail.com>",
+  "license": "ISC"
+}
