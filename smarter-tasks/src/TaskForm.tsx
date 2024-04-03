@@ -8,6 +8,7 @@ interface TaskFormState {
   title : string;
   description: string;
   dueDate: string;
+  id: string;
 }
 // class TaskForm extends React.Component<TaskFormProps, TaskFormState> {
 //   constructor(props: TaskFormProps) {
@@ -73,6 +74,7 @@ interface TaskFormState {
     title: "",
     description: "",
     dueDate: "",
+    id: "",
   });
 
   const titleChanged: React.ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -87,7 +89,9 @@ interface TaskFormState {
 
   const dueDateChanged: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     console.log(`${event.target.value}`);
-    setFormState({ ...formState, dueDate: event.target.value });
+    const newId = new Date().toString();
+    console.log(`newId: ${newId}`);
+    setFormState({ ...formState, dueDate: event.target.value, id: newId});
   }
   
   const addTask: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -97,7 +101,7 @@ interface TaskFormState {
       return;
     }
     props.addTask(formState);
-    setFormState({ title: "", description: "", dueDate: "" });
+    setFormState({ title: "", description: "", dueDate: "", id: ""});
   };
 
   return (

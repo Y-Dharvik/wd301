@@ -2,6 +2,7 @@ import Task from "./Task";
 import { TaskItem } from "./types";
 interface Props {
   tasks: TaskItem[];
+  deleteTask: (id: string) => void;
 }
 // interface State {}
 // class TaskList extends React.Component<Props, State> {
@@ -16,9 +17,15 @@ interface Props {
 
 const TaskListFC = (props: Props) => {
   const list = props.tasks.map((task, idx) => (
-    <Task key={idx} title={task.title} dueDate={task.dueDate} description={task.description}/>
+    <li>
+      <Task key={idx} title={task.title} dueDate={task.dueDate} description={task.description} id={task.id} deleteTask={props.deleteTask} />
+    </li>
   ));
-  return <>{list}</>
+  return (
+    <>
+      <ul>{list}</ul>
+    </>
+  );
 }
 
 export default TaskListFC;

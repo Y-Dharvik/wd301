@@ -62,9 +62,16 @@ const TaskAppFC = () => {
     });
   };
 
+  const deleteTask = (taskId: string) => {
+    setTasks((state: TaskItem[]) => {
+      return state.filter((task) => task.id !== taskId); 
+    });
+  }
+
   useEffect(() => {
     const id =setTimeout(() => {
         console.log(`Saved ${tasks.length} tasks to the database`);
+        document.title = `Tasks: ${tasks.length}`;
     },5000);
 
     return () => {
@@ -88,7 +95,7 @@ const TaskAppFC = () => {
             Pending
           </h1>
           <TaskForm addTask={addTask} />
-          <TaskList tasks={tasks} />
+          <TaskList tasks={tasks} deleteTask={deleteTask} />
         </div>
       </div>
     </div>
