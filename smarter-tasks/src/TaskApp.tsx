@@ -1,4 +1,5 @@
-import React from "react";
+import {useEffect} from "react";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import { TaskItem } from "./types";
@@ -51,13 +52,26 @@ import { TaskItem } from "./types";
 
 const TaskAppFC = () => {
 
-  const [tasks, setTasks] = React.useState<TaskItem[]>([]);
+  const [tasks, setTasks] = useLocalStorage<TaskItem[]>("tasks", []);
 
   const addTask = (task: TaskItem) => {
-    setTasks((state) => {
+    setTasks((
+      state: TaskItem[]
+    ) => {
       return [...state, task];
     });
   };
+
+  useEffect(() => {
+    const id =setTimeout(() => {
+        console.log(`Saved ${tasks.length} tasks to the database`);
+    },5000);
+
+    return () => {
+      console.log("clear or cancel any existing network call");
+      clearTimeout(id);
+    };
+  }, [tasks]);
 
   return (
     <div className="container py-10 max-w-4xl mx-auto">
