@@ -9,7 +9,7 @@ import TaskDetailsPage from "./pages/TaskDetailsPage";
 import Layout from "./Layout";
 import Signin from "./pages/Signin";
 import ProtectedRoute from "./ProtectedRoute";
-import NotFound from "./pages/NotFound";
+import Notfound from "./pages/Notfound";
 
 
 const router = createBrowserRouter([
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/notfound",
-    element: <NotFound />,
+    element: <Notfound />,
   },
   {
     element: (
