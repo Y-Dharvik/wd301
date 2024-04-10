@@ -1,4 +1,5 @@
 import "./TaskCard.css";
+import { Link } from "react-router-dom";
 
 interface TaskProps {
     title : string;
@@ -24,7 +25,7 @@ interface TaskProps {
 const TaskFC = (props: TaskProps) => {
   return (
     <div className="TaskItem shadow-md border border-slate-100">
-      <h3 className="text-base font-bold my-1">{props.title} ({props.dueDate}) <button className="deleteTaskButton bg-red-500 m-2 rounded-md p-2 hover:bg-red-600" 
+      <h3 className="text-base font-bold my-1"><Link to={`/tasks/${props.id || ""}`}>{props.title}  ({props.dueDate}) </Link> <button className="deleteTaskButton bg-red-500 m-2 rounded-md p-2 hover:bg-red-600" 
       onClick={() => props.deleteTask(props.id)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

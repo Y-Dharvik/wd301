@@ -1,10 +1,62 @@
-import './App.css';
-import TaskApp from './TaskApp';
-function App() {
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate
+} from "react-router-dom";
+import HomePage from './pages/HomePage';
+import TaskListPage from './pages/TaskListPage';
+import TaskDetailsPage from "./pages/TaskDetailsPage";
+import Layout from "./Layout";
+import Signin from "./pages/Signin";
+import ProtectedRoute from "./ProtectedRoute";
+import NotFound from "./pages/NotFound";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/signin" replace />,
+  },
+  {
+    path: "/signin",
+    element: <Signin />,
+  },
+  {
+    path: "/notfound",
+    element: <NotFound />,
+  },
+  {
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "home",
+        element: <HomePage />,
+      },
+      {
+        path: "tasks",
+        element: <TaskListPage />,
+      },
+      {
+        path: "tasks/:id",
+        element: <TaskDetailsPage />,
+      },
+    ],
+  },
+  {
+    //any path other than the availableRoutes will redirect to the notFound page
+    path: "*",
+    element: <Navigate to="/notfound" replace />,
+  }
+]);
+
+const App = () => {
   return (
-    <div className="App">
-      <TaskApp />
-    </div>
+    <RouterProvider router={router} />
   );
 }
-export default App;
+
+export default App
