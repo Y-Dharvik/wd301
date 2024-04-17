@@ -1,7 +1,7 @@
 import React from "react";
 
 const UserDetails: React.FC = () => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem('userData') as string);
     const name = userData.name;
     const email = userData.email;
   return (
