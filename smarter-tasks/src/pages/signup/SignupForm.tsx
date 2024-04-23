@@ -28,10 +28,10 @@ const SignupForm: React.FC = () => {
     localStorage.setItem('authToken', data.token);
     // if successful, save the user info in localStorage
     localStorage.setItem('userData', JSON.stringify(data.user))
+    // message should display to the user in signin page
+    localStorage.setItem('message', 'Sign up successful. Please sign in.');
       // redirect to the signin page using the navigate function
-      navigate('/signin');
-      // message should display to the user in signin page
-      localStorage.setItem('message', 'Sign up successful. Please sign in.');
+      navigate('/account');
       
     } catch (error) {
       console.error('Sign-up failed:', error);
