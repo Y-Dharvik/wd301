@@ -7,6 +7,7 @@ import Signup from "../pages/signup"
 import Projects from "../pages/projects"
 import Members from "../pages/members"
 import Logout from "../pages/logout";
+import Notfound from "../pages/Notfound";
 
 const router = createBrowserRouter([
   {
@@ -47,15 +48,19 @@ const router = createBrowserRouter([
         element: (<Projects />)
       },
       {
-        path: "projects",
-        element: (<Projects />)
-      },
-      {
         path: "members",
         element: (<Members />)
       },
     ],
   },
+  {
+    path: "/notfound",
+    element: <Notfound />
+  },
+  {
+    path: "*",
+    element: <Navigate to="/notfound" replace />
+  }
 ]);
 
 export default router;
