@@ -13,7 +13,6 @@ const SigninForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
 

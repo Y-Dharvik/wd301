@@ -15,7 +15,6 @@ const SignupForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<Inputs> = async (parm) => {
