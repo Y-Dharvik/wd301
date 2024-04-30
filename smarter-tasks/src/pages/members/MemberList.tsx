@@ -9,7 +9,7 @@ const MemberList: React.FC = () => {
   
   useEffect(() => {
     fetchMembers(dispatchMembers)
-  }, [])
+  }, [dispatchMembers])
   return (
     <div className="grid gap-4 grid-cols-4 mt-5">
       {/*To keep this file clean, I'll move all the logic to access the projects 
