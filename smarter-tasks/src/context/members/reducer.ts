@@ -1,4 +1,5 @@
 interface Member {
+    id: Key | null | undefined;
     email: string;
     name: string;
     password: string;
