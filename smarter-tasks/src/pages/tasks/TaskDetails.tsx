@@ -395,6 +395,11 @@ const TaskDetails = () => {
                       </Dialog.Panel>
                     )}
                   </Transition>
+                  <div>
+                    <h3>Comments</h3>
+                    <NewComment />
+                    <CommentList />
+                  </div>
                   {/* {openComments && (
                           <Dialog.Panel className="fixed inset-0 overflow-y-auto flex justify-center items-center">
                           <div className="bg-white p-6 max-w-md mx-auto rounded-lg shadow-xl">
