@@ -2,7 +2,6 @@
 import React from "react";
 import {
   AvailableColumns,
-  ColumnData,
   ProjectData,
 } from "../../context/task/types";
 import Column from "./Column";
