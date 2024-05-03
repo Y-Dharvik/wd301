@@ -1,8 +1,9 @@
 export interface TaskListState {
-    isLoading: boolean;
-    isError: boolean;
-    errorMessage: string;
-  }
+  projectData: ProjectData;
+  isLoading: boolean;
+  isError: boolean;
+  errorMessage: string;
+}
   
   // Actions that are available
   export enum TaskListAvailableAction {
@@ -64,7 +65,8 @@ export interface TaskListState {
     dueDate: string;
     state: AvailableColumns;
     assignee?: number,
-    assignedUserName?: string
+    assignedUserName?: string;
+
   };
 
   export type TaskDetailsPayload = Omit<TaskDetails, "id" | "assignee" | "state">;
@@ -78,10 +80,3 @@ export interface TaskListState {
     columns: Columns;
     columnOrder: AvailableColumns[];
   };
-
-  export interface TaskListState {
-    projectData: ProjectData;
-    isLoading: boolean;
-    isError: boolean;
-    errorMessage: string;
-  }

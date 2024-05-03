@@ -1,5 +1,5 @@
 import { Dialog, Transition, Listbox } from "@headlessui/react";
-import React, { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTasksDispatch, useTasksState } from "../../context/task/context";
@@ -8,6 +8,11 @@ import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import { useProjectsState } from "../../context/projects/context";
 import { TaskDetailsPayload } from "../../context/task/types";
 import { useMembersState } from "../../context/members/context";
+import {addComment, fetchComments} from "../../context/comment/actions";
+import { useCommentsDispatch } from "../../context/comment/context";
+import { useCommentsState } from "../../context/comment/context";
+import { CommentsPayload } from "../../context/comment/types";
+
 
 type TaskFormUpdatePayload = TaskDetailsPayload & {
     selectedPerson: string;
@@ -42,6 +47,7 @@ const TaskDetails = () => {
   )[0];
 
   const selectedTask = taskListState.projectData.tasks[taskID ?? ""];
+
   // Use react-form-hook to manage the form. Initialize with data from selectedTask.
   const [selectedPerson, setSelectedPerson] = useState(
     selectedTask.assignedUserName ?? ""
@@ -49,7 +55,6 @@ const TaskDetails = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<TaskFormUpdatePayload>({
     defaultValues: {
       title: selectedTask.title,
@@ -78,6 +83,129 @@ const TaskDetails = () => {
       assignee: assignee?.id,
     });
     closeModal();
+  };
+  const [openComments, setOpenComments] = useState(false);
+
+  const CommentList = () => {
+    const commentState = useCommentsState();
+  
+    const { comments, isLoading, isError, errorMessage } = commentState;
+    console.log(comments)
+  
+    if (isError) {
+      return <div>Error: {errorMessage}</div>;
+    }
+  
+    if (isLoading) {
+      return <div>Loading comments...</div>;
+    }
+  
+    // Get the current user from localStorage
+    const currentMember = JSON.parse(localStorage.getItem("userData") || "{}");
+    const User = currentMember.name.toString();
+    return (
+      <div className="mt-4">
+        <h3 className="text-lg font-medium">Comments</h3>
+        <div className="mt-2">
+          {comments.length === 0 ? (
+            <div>No comments yet</div>
+          ) : (
+            <div>
+              <table className="w-full" cellPadding={3}>
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comments.map((comment) => (
+                    <tr key={comment.id}>
+                      <td>{comment.description}</td>
+                      <td>{new Date(comment.createdAt).toLocaleString()}</td>
+                      <td>{comment.User ? comment.User.name : User}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+  
+
+  const NewComment = () => {
+    const [, setIsOpen] = useState(true);
+  
+    const { projectID, taskID } = useParams();
+    const navigate = useNavigate();
+    const commentDispatch = useCommentsDispatch();
+    const {
+      register,
+      handleSubmit,
+    } = useForm<CommentsPayload>({});
+  
+    useEffect(() => {
+      if (taskID && projectID) fetchComments(commentDispatch, projectID, taskID);
+    }, [commentDispatch, projectID, taskID]);
+    function closeModal() {
+      setIsOpen(false);
+      navigate("../../");
+    }
+  
+    const handleAddComment: SubmitHandler<CommentsPayload> = async (formData) => {
+      try {
+        const currentMemberString = localStorage.getItem("userData");
+        if (!currentMemberString) {
+          console.error("User data not found in local storage.");
+          return;
+        }
+        const currentMember = JSON.parse(currentMemberString);
+        console.log('fd',formData);
+        if (currentMember.name) {
+          const comment = {
+            description: formData.comment,
+            name: currentMember.name.toString(),
+            timestamp: new Date().toISOString(),
+          };
+          console.log(comment);
+          if (projectID && taskID) {
+            addComment(commentDispatch, projectID, taskID, comment);
+          }
+        }
+      } catch (error) {
+        console.log("Operation failed", error);
+      }
+    };
+    return (
+      <>
+        <form onSubmit={handleSubmit(handleAddComment)} className="mt-4">
+          <input
+            type="text"
+            id="commentBox"
+            {...register("comment")}
+            placeholder="Add a comment..."
+            className="w-full border rounded-md py-2 px-3 my-2 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
+          />
+          <button
+            type="submit"
+            id="addCommentBtn"
+            className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          >
+            Add Comment
+          </button>
+          <button
+            onClick={closeModal}
+            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 mx-3 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          >
+            Cancel
+          </button>
+        </form>
+      </>
+    );
   };
 
   return (
@@ -218,6 +346,102 @@ const TaskDetails = () => {
                       Cancel
                     </button>
                   </form>
+                  <button
+                      onClick={() => {
+                        setOpenComments(true);
+                        
+                      }}
+                      
+                      style={{ marginLeft: "300px" }}
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 mr-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    >
+                      Comments
+                    </button>
+                  <Transition>
+                    {openComments && (
+                      <Dialog.Panel className="fixed inset-0 overflow-y-auto flex justify-center items-center">
+                        <div className="bg-white p-6 max-w-md mx-auto rounded-lg shadow-xl">
+                          <Dialog.Title className="text-lg font-medium leading-6 text-gray-900">
+                            Comments
+                          </Dialog.Title>
+                          <NewComment />
+                          <CommentList />
+                          
+                          {/* <form
+                            
+                          >
+                            <input
+                              type="text"
+                              required
+                              placeholder="Enter comment"
+                              id="comment"
+                              className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
+                            />
+                            <button
+                              type="submit"
+                              className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 mr-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            >
+                              Add Comment
+                            </button>
+                            <button
+                              type="submit"
+                              onClick={() => setOpenComments(false)}
+                              className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                            >
+                              Close
+                            </button>
+                          </form> */}
+                        </div>
+                      </Dialog.Panel>
+                    )}
+                  </Transition>
+                  {/* {openComments && (
+                          <Dialog.Panel className="fixed inset-0 overflow-y-auto flex justify-center items-center">
+                          <div className="bg-white p-6 max-w-md mx-auto rounded-lg shadow-xl">
+                            <Dialog.Title className="text-lg font-medium leading-6 text-gray-900">
+                              Comments
+                            </Dialog.Title>
+                            <form
+                              onSubmit={(e) => {
+                                e.preventDefault();
+                                const comment = e.currentTarget.comment.value;
+                                createComment(useCommentsDispatch, taskID ?? "", comment);
+                              }}
+                              >
+                              <input
+                                type="text"
+                                required
+                                placeholder="Enter comment"
+                                id="comment"
+                                className="w-full border rounded-md py-2 px-3 my-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline-blue"
+                              />
+                              <button
+                                type="submit"
+                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 mr-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                >
+                                Add Comment
+                              </button>
+                              <button
+                                type="submit"
+                                onClick={() => setOpenComments(false)}
+                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                >
+                                Close
+                              </button>
+                            </form>
+                            <ul>
+                              {(selectedTask.comments ?? []).map((comment) => (
+                                <li key={comment.id}>
+                                  <div className="flex items-center">
+                                    <BuildingStorefrontIcon className="h-5 w-5 mr-2" />
+                                    <span>{comment.comment}</span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          </Dialog.Panel>
+                        )} */}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -226,6 +450,7 @@ const TaskDetails = () => {
       </Transition>
     </>
   );
+
 };
 
 export default TaskDetails;
