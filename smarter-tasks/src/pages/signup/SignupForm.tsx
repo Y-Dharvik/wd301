@@ -36,12 +36,10 @@ const SignupForm: React.FC = () => {
       }
       // extract the response body as JSON data
       const data = await response.json();
-
+      console.log("data: ", data);
       localStorage.setItem("authToken", data.token);
       // if successful, save the user info in localStorage
       localStorage.setItem("userData", JSON.stringify(data.user));
-      // message should display to the user in signin page
-      localStorage.setItem("message", "Sign up successful. Please sign in.");
       // redirect to the signin page using the navigate function
       navigate("/account");
     } catch (error) {

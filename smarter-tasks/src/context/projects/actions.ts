@@ -3,7 +3,8 @@ import { API_ENDPOINT } from '../../config/constants';
 
 export const fetchProjects = async (dispatch: any) => {
   const token = localStorage.getItem("authToken") ?? "";
-  
+  console.log('fetchProjects token:', token);
+  console.log(localStorage);
   try {
     dispatch({ type: "FETCH_PROJECTS_REQUEST" });
     const response = await fetch(`${API_ENDPOINT}/projects`, {
