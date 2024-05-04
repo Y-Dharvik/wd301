@@ -111,7 +111,7 @@ const TaskDetails = () => {
             <div>No comments yet</div>
           ) : (
             <div>
-              <table className="w-full" cellPadding={3}>
+              <table className="w-full comment" cellPadding={3}>
                 <thead>
                   <tr>
                     <th>Description</th>
@@ -121,7 +121,7 @@ const TaskDetails = () => {
                 </thead>
                 <tbody>
                   {comments.map((comment) => (
-                    <tr key={comment.id}>
+                    <tr key={comment.id} className='comment'>
                       <td>{comment.description}</td>
                       <td>{new Date(comment.createdAt).toLocaleString()}</td>
                       <td>{comment.User ? comment.User.name : User}</td>
