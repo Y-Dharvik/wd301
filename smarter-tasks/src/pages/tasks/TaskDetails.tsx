@@ -111,7 +111,7 @@ const TaskDetails = () => {
             <div>No comments yet</div>
           ) : (
             <div>
-              <table className="w-full comment" cellPadding={3}>
+              <table className="w-full" cellPadding={3}>
                 <thead>
                   <tr>
                     <th>Description</th>
