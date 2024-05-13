@@ -83,15 +83,15 @@ const router = createBrowserRouter([
         path: "members",
         element: <Members />,
       },
-      {
-        path: "/notfound",
-        element: <Notfound />,
-      },
-      {
-        path: "*",
-        element: <Navigate to="/notfound" replace />,
-      },
     ],
+  },
+  {
+    path: "/notfound",
+    element: <Notfound />,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/notfound" replace />,
   },
 ]);
 
