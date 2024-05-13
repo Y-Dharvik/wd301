@@ -84,6 +84,7 @@ const TaskDetails = () => {
     });
     closeModal();
   };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [openComments, setOpenComments] = useState(false);
 
   const CommentList = () => {
@@ -351,6 +352,7 @@ const TaskDetails = () => {
                         setOpenComments(true);
                         
                       }}
+                      id="commentstoggle"
                       
                       style={{ marginLeft: "300px" }}
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 mr-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -359,7 +361,7 @@ const TaskDetails = () => {
                     </button>
                   <Transition>
                     {openComments && (
-                      <Dialog.Panel className="fixed inset-0 overflow-y-auto flex justify-center items-center">
+                      <Dialog.Panel className="fixed inset-0 overflow-y-auto flex justify-center items-center bg-black bg-opacity-45">
                         <div className="bg-white p-6 max-w-md mx-auto rounded-lg shadow-xl">
                           <Dialog.Title className="text-lg font-medium leading-6 text-gray-900">
                             Comments
