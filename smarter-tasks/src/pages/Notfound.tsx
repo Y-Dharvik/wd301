@@ -14,7 +14,7 @@ const Notfound: React.FC = () => {
       <br />
       <div className='text-xl font-bold text-center mt-8'>
         <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' id="backToHomeButton">
-          <Link to='/dashboard'>Go Home</Link>
+          <Link to='/account'>Go Home</Link>
         </button>
       </div>
       

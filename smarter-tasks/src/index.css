@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 .dark {
-    @apply bg-slate-800 text-zinc-50;
+    @layer bg-smart-dark;
+    @apply bg-slate-900 text-white;
   }

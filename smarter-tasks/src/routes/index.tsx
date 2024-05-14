@@ -3,8 +3,19 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import AccountLayout from "../layouts/account";
 import ProtectedRoute from "./ProtectedRoute";
+// import Notfound from "../pages/Notfound";
+// import ProjectContainer from "../pages/projects";
+
+//import Signin from "../pages/signin"
+//import Signup from "../pages/signup"
+//import Projects from "../pages/projects"
+//import Members from "../pages/members"
+// import Logout from "../pages/logout";
 import Notfound from "../pages/Notfound";
-import ProjectContainer from "../pages/projects";
+import ProjectContainer from "../pages/projects/ProjectContainer";
+// import ProjectDetails from "../pages/project_details";
+// import NewTask from "../pages/tasks/NewTask";
+// import TaskDetailsContainer from "../pages/tasks/TaskDetailsContainer";
 
 const Signin = React.lazy(() => import("../pages/signin"));
 const Signup = React.lazy(() => import("../pages/signup"));
@@ -17,18 +28,27 @@ const TaskDetailsContainer = React.lazy(
   () => import("../pages/tasks/TaskDetailsContainer")
 );
 
+
+let authenticated = !!localStorage.getItem("authToken");
+const checkAuth = () => {
+  authenticated = !!localStorage.getItem("authToken");
+  if (authenticated) {
+    return <Navigate to="/account/projects" replace />;    
+    
+  }else{
+    return <Navigate to="/signin" replace />;
+  }
+}
+
+
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Navigate to="/account/projects" replace />,
-  },
-  {
-    path: "/",
-    element: <Signin />,
+  { 
+    path: "/", 
+    element: checkAuth(),
   },
   {
     path: "/signin",
-    element: <Signin />,
+    element: <Signin />
   },
   {
     path: "/signup",
@@ -40,7 +60,7 @@ const router = createBrowserRouter([
   },
   // Protected Routes
   {
-    path: "account",
+    path: "/account",
     element: (
       <ProtectedRoute>
         <AccountLayout />
@@ -48,9 +68,9 @@ const router = createBrowserRouter([
     ),
     ErrorBoundary: () => <>Failed to load the page</>,
     children: [
-      {
-        index: true,
-        element: <Navigate to="/account/projects" replace />,
+      { 
+        index: true, 
+        element: <Navigate to="/account/projects" replace /> 
       },
       {
         path: "projects",
@@ -65,8 +85,11 @@ const router = createBrowserRouter([
               {
                 path: "tasks",
                 children: [
-                  { index: true, element: <Navigate to="../" replace /> },
-                  { path: "new", element: <NewTask /> },
+                  { index: true, element: <Navigate to="../" /> },
+                  {
+                    path: "new",
+                    element: <NewTask />,
+                  },
                   {
                     path: ":taskID",
                     children: [
@@ -81,18 +104,18 @@ const router = createBrowserRouter([
       },
       {
         path: "members",
-        element: <Members />,
+        element: (<Members />)
       },
     ],
   },
   {
     path: "/notfound",
-    element: <Notfound />,
+    element: <Notfound />
   },
   {
     path: "*",
-    element: <Navigate to="/notfound" replace />,
-  },
+    element: <Navigate to="/notfound" replace />
+  }
 ]);
 
 export default router;

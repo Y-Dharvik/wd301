@@ -10,7 +10,7 @@ const App = () => {
   const { theme } = useContext(ThemeContext);
   return (
     <div
-      className={`h-full w-full mx-auto py-2 ${theme === "dark" ? "dark" : ""}`}
+      className={`mx-auto h-screen flex flex-col px-4py-2 ${theme === "dark" ? "dark" : ""}`}
     >
       <ProjectsProvider>
         <MembersProvider>

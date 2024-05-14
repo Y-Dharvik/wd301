@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Link } from 'react-router-dom';
 // Just import the file
 import SigninForm from './SigninForm';
@@ -14,7 +14,9 @@ const Signin: React.FC = () => {
           <p className="text-sm text-red-600">{message}</p>
         </div>}
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Sign in</h1>
-        <SigninForm />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SigninForm />
+        </Suspense>
         
         <div className="text-center mt-4">
           <p className="text-sm text-gray-800">Don't have an account? <Link to="/signup" className="text-blue-600">Sign up</Link></p>
