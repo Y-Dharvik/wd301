@@ -1,27 +1,53 @@
-import { RouterProvider } from "react-router-dom";
-import router from "./routes";
-import { ThemeContext } from "./context/theme";
-import { ProjectsProvider } from "./context/projects/context";
-import { MembersProvider } from "./context/members/context";
-import { CommentProvider } from "./context/comment/context";
-import { Suspense, useContext } from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate
+} from "react-router-dom";
+import Signin from "./pages/signin";
+import ProtectedRoute from "./ProtectedRoute";
+import Notfound from "./pages/Notfound";
+import Signup from './pages/signup';
+import Dashboard from "./pages/dashboard";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/signin" replace />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/signin",
+    element: <Signin />,
+  },
+  {
+    path: "/notfound",
+    element: <Notfound />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    //any path other than the availableRoutes will redirect to the notFound page
+    path: "*",
+    element: <Navigate to="/notfound" replace />,
+  }
+]);
 
 const App = () => {
-  const { theme } = useContext(ThemeContext);
   return (
-    <div
-      className={`mx-auto h-screen flex flex-col px-4py-2 ${theme === "dark" ? "dark" : ""}`}
-    >
-      <ProjectsProvider>
-        <MembersProvider>
-          <CommentProvider>
-            <Suspense fallback={<>Loading...</>}>
-              <RouterProvider router={router} />
-            </Suspense>
-          </CommentProvider>
-        </MembersProvider>
-      </ProjectsProvider>
-    </div>
+    <>
+      <RouterProvider router={router} />
+    </>
   );
-};
-export default App;
+}
+
+export default App
